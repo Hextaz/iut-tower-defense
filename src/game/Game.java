@@ -5,8 +5,7 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /* The class begins below the enum. */
 
@@ -23,7 +22,7 @@ import javax.swing.JOptionPane;
  * they represent.  SETUP = The game is setting up, etc.
  */
 enum GameState { SETUP, UPDATE, DRAW, WAIT, END }
-
+enum Difficulty { EASY, NORMAL, HARD }
 /**
  * This class represents the playable game.  If you create an
  * object from this class, you have created an instance of the
@@ -58,10 +57,12 @@ public class Game implements Runnable
     /* Object fields and methods */
     private Image backdrop;				// background star image		
     private PathPoints line;			// path coordinates
-    
-    private GamePanel gamePanel;		// gamePanel object 
+
+
+    private GamePanel gamePanel;		// gamePanel object
     private GameState state;	   		// The current game state
-    
+    private Difficulty difficulty;      // nouvelle difficulté choisie private int killTarget; // cible d’ennemis à éliminer // ...
+
     private int frameCounter;			// keeps track of frame updates
     private long lastTime;				// keeps track of time
     
@@ -77,7 +78,7 @@ public class Game implements Runnable
     int livesCounter; 					// counter for lives left
     int scoreCounter;					// points the user earns
     int killsCounter;					// number of enemies destroyed
-    
+    int killTarget;					// target number of enemies to destroy
     /* create enemies */
     List<Enemy> enemies;				// list of enemy objects
     
@@ -169,6 +170,12 @@ public class Game implements Runnable
             
             else if (state == GameState.END)
             {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                        null,
+                        gameIsWon ? "Victory!" : "Defeat...",
+                        "End of Game",
+                        JOptionPane.INFORMATION_MESSAGE ));
+                return;
                 // Do cleanup if any.  (We don't need to do anything here yet.)
             }
         }
@@ -198,12 +205,37 @@ public class Game implements Runnable
         		"2. Black holes shoot star dust and are cheaper, Suns shoot sun spots and are faster.\n" +
         		"3. You earn money for stopping enemies, but as the game progresses, new enemies attack.\n" +
         		"4. If you stop 500 enemies you win, but if you lose 10 lives the game is over.");
-        
-        // fill counters
-        livesCounter = 10;		// gives the player 10 lives
-        scoreCounter = 200;		// give the user 500 points to begin
-        killsCounter = 0;		// begin with 0 kills
-        
+
+        Difficulty[] options = Difficulty.values();
+        int choice = JOptionPane.showOptionDialog(
+                null,
+                "Choose a difficulty level:",
+                "Difficulty Selection",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                Difficulty.NORMAL);
+        difficulty = (choice >=0) ? options[choice] : Difficulty.NORMAL;
+
+        switch (difficulty) {
+            case EASY -> {
+                livesCounter =20;
+                scoreCounter =400;
+                killTarget =250;
+            }
+            case HARD -> {
+                livesCounter =5;
+                scoreCounter =100;
+                killTarget =1000;
+            }
+            case NORMAL -> {
+                livesCounter =10;
+                scoreCounter =200;
+                killTarget =500;
+            }
+        }
+        killsCounter =0;
         // Reset the frame counter and time 
         frameCounter = 0;
         lastTime = System.currentTimeMillis();
@@ -249,12 +281,12 @@ public class Game implements Runnable
     private void doUpdateTasks()
     {	
     	if(gameIsOver)
-    	{	state = GameState.DRAW;
+    	{	state = GameState.END;
     		return;
     	}
     	
     	if(gameIsWon)
-    	{	state = GameState.DRAW;
+    	{	state = GameState.END;
     		return;
     	}
     	
@@ -306,9 +338,9 @@ public class Game implements Runnable
     		livesCounter = 0;
     	}
     	
-    	if(killsCounter >= 500)
+    	if(killsCounter >= killTarget)
     	{	gameIsWon = true;
-    		killsCounter = 500;
+    		killsCounter = killTarget;
     	}
     	
         // After we have updated the objects in the game, we need to
@@ -535,4 +567,37 @@ public class Game implements Runnable
     		newSun.setPosition(mouseLocation);
     	}	
     }
+
+    public boolean isGameIsOver() {
+        return gameIsOver;
+    }
+
+    public void setGameIsOver(boolean gameIsOver) {
+        this.gameIsOver = gameIsOver;
+    }
+
+    public boolean isGameIsWon() {
+        return gameIsWon;
+    }
+
+    public void setGameIsWon(boolean gameIsWon) {
+        this.gameIsWon = gameIsWon;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
 }	
