@@ -74,15 +74,15 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     
     public Dimension getMinimumSize ()
     {
-        return new Dimension(800,600);
+        return new Dimension(800,800);
     }
     public Dimension getMaximumSize ()
     {
-        return new Dimension(800,600);
+        return new Dimension(800,800);
     }
     public Dimension getPreferredSize ()
     {
-        return new Dimension(800,600);
+        return new Dimension(800,800);
     }
 
     /* MouseListener methods */
