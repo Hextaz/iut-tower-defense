@@ -65,6 +65,9 @@ public class Game implements Runnable
 
     private int frameCounter;			// keeps track of frame updates
     private long lastTime;				// keeps track of time
+
+    private boolean placingMissil;	// true if tower is being placed
+    private Tower newMissil; 		// variable to hold new tower objects
     
     private boolean placingBlackHole;	// true if tower is being placed
     private Tower newBlackHole; 		// variable to hold new tower objects
@@ -330,6 +333,7 @@ public class Game implements Runnable
     	frameCounter++;
     	
     	// Place towers if user chooses
+        this.placeMissils();
     	this.placeBlackHoles();
     	this.placeSuns();
     	
@@ -398,7 +402,7 @@ public class Game implements Runnable
     	
         // draw menu bar
         g.setColor(Color.WHITE);
-        g.fillRect(600, 0, 200, 600);
+        g.fillRect(600, 0, 200, 800);
         
         // draw score & life counters to menu bar
         g.setColor(Color.BLACK);
@@ -406,33 +410,46 @@ public class Game implements Runnable
         g.drawString("Lives Remaining: " + livesCounter, 605, 100);	// lives counter
         g.drawString("Money Earned: " + scoreCounter, 605, 150);	// score counter
         g.drawString("Enemies Stopped: " + killsCounter, 605, 200);
-        g.drawString("Blackhole Cost: 100", 610, 380);				// cost for black hole towers
-        g.drawString("Sun Cost: 300", 640, 530);					// cost for sun towers
+        g.drawString("Missil Cost: 60", 610, 370);
+        g.drawString("Blackhole Cost: 100", 610, 520);				// cost for black hole towers
+        g.drawString("Sun Cost: 300", 610, 670);					// cost for sun towers
         g.setFont(new Font("Lucidia Sans", Font.ITALIC, 28));		
         g.drawString("Planet Defense", 600, 50);					// writes title
         g.drawLine(600, 50, 800, 50);								// underscore
         g.drawString("Towers", 640, 240);							// writes towers
-        g.drawLine(620, 240, 780, 240);								// underscore	
-        
-        // draw box around blackhole icon
+        g.drawLine(620, 240, 780, 240);								// underscore
+
+        // draw box around missil icon
         g.setColor(new Color(224, 224, 224));
         g.fillRect(650, 250, 100, 100);
-        
+
         // draw tower in menu area
-        BlackHole blackhole = new BlackHole(new Coordinate(700, 300));
-        blackhole.draw(g);
+        Missil missil = new Missil(new Coordinate(700, 300));
+        missil.draw(g);
         
-        // draw box around sun icon
+        // draw box around blackhole icon
         g.setColor(new Color(224, 224, 224));
         g.fillRect(650, 400, 100, 100);
         
         // draw tower in menu area
-        Sun sun = new Sun(new Coordinate(700, 450));
+        BlackHole blackhole = new BlackHole(new Coordinate(700, 450));
+        blackhole.draw(g);
+        
+        // draw box around sun icon
+        g.setColor(new Color(224, 224, 224));
+        g.fillRect(650, 550, 100, 100);
+        
+        // draw tower in menu area
+        Sun sun = new Sun(new Coordinate(700, 600));
         sun.draw(g);
+
+        // draws missil object with mouse movements
+        if(newBlackHole != null)
+            newBlackHole.draw(g);
         
         // draws blackhole object with mouse movements
-        if(newBlackHole != null)
-        	newBlackHole.draw(g);
+        if(newMissil != null)
+        	newMissil.draw(g);
 
         // draws sun object with mouse movements
         if(newSun != null)
@@ -493,79 +510,103 @@ public class Game implements Runnable
 	 		enemies.add(new Comet(line.getStart()));
 	 	}
     }
-    
+
+    /**
+     * Method for placing missiles on the screen
+     */
+    public void placeMissils()
+    {
+        Coordinate mouseLocation = new Coordinate(gamePanel.mouseX, gamePanel.mouseY);
+
+        if(gamePanel.mouseX > 650 && gamePanel.mouseX < 750 &&
+                gamePanel.mouseY > 250 && gamePanel.mouseY < 350 &&
+                gamePanel.mouseIsPressed && scoreCounter >= 60)
+        {
+            placingMissil = true;
+            newMissil = new Missil(mouseLocation);
+        }
+        else if(gamePanel.mouseX > 0 && gamePanel.mouseX < 600 &&
+                gamePanel.mouseY > 0 && gamePanel.mouseY < 600 &&
+                gamePanel.mouseIsPressed && placingMissil
+                && line.distanceToPath(gamePanel.mouseX, gamePanel.mouseY) > 60)
+        {
+            newMissil.setPosition(mouseLocation);
+            towers.add(new Missil(mouseLocation));
+            scoreCounter -= 60;
+            newMissil = null;
+            placingMissil = false;
+        }
+
+        if(newMissil != null)
+        {
+            newMissil.setPosition(mouseLocation);
+        }
+    }
+
     /**
      * Method for placing black holes on the screen
      */
     public void placeBlackHoles()
     {
-    	/* I need to make it so you can't place towers on path or off the screen */
-    	
-    	 // variable to hold mouse location
-    	Coordinate mouseLocation = new Coordinate(gamePanel.mouseX, gamePanel.mouseY);
-    	
-    	// moves the tower object as mouse moves
-    	if(gamePanel.mouseX > 650 && gamePanel.mouseX < 750 && 
-    		gamePanel.mouseY > 250 && gamePanel.mouseY < 350 && 
-    		gamePanel.mouseIsPressed && scoreCounter >= 100)
-    	{	// if mouse is pressed on tower icon, create a new object
-	    		placingBlackHole = true;
-	    		newBlackHole = new BlackHole(mouseLocation);
-    	}    
-    	else if(gamePanel.mouseX > 0 && gamePanel.mouseX < 600 && 
-        	gamePanel.mouseY > 0 && gamePanel.mouseY < 600 && 
-        	gamePanel.mouseIsPressed && placingBlackHole
-        	&& line.distanceToPath(gamePanel.mouseX, gamePanel.mouseY) > 60)
-    	{	// if mouse is pressed on game screen, place tower on game screen
-	    		newBlackHole.setPosition(mouseLocation);
-	    		towers.add(new BlackHole(mouseLocation));
-	    		scoreCounter -= 100;
-	    		newBlackHole = null;
-	    		placingBlackHole = false;	
-    	}
-    	
-    	// moves tower object with mouse movements
-    	if(newBlackHole != null)
-    	{
-    		newBlackHole.setPosition(mouseLocation);
-    	}	
+        Coordinate mouseLocation = new Coordinate(gamePanel.mouseX, gamePanel.mouseY);
+
+        // CORRECTION : Zone Y passée de 250-350 à 400-500
+        if(gamePanel.mouseX > 650 && gamePanel.mouseX < 750 &&
+                gamePanel.mouseY > 400 && gamePanel.mouseY < 500 &&
+                gamePanel.mouseIsPressed && scoreCounter >= 100)
+        {
+            placingBlackHole = true;
+            newBlackHole = new BlackHole(mouseLocation);
+        }
+        else if(gamePanel.mouseX > 0 && gamePanel.mouseX < 600 &&
+                gamePanel.mouseY > 0 && gamePanel.mouseY < 600 &&
+                gamePanel.mouseIsPressed && placingBlackHole
+                && line.distanceToPath(gamePanel.mouseX, gamePanel.mouseY) > 60)
+        {
+            newBlackHole.setPosition(mouseLocation);
+            towers.add(new BlackHole(mouseLocation));
+            scoreCounter -= 100;
+            newBlackHole = null;
+            placingBlackHole = false;
+        }
+
+        if(newBlackHole != null)
+        {
+            newBlackHole.setPosition(mouseLocation);
+        }
     }
-    
+
     /**
      * Method for placing suns on the screen
      */
     public void placeSuns()
     {
-    	/* I need to make it so you can't place towers on path or off the screen */
-    	
-    	 // variable to hold mouse location
-    	Coordinate mouseLocation = new Coordinate(gamePanel.mouseX, gamePanel.mouseY);
-    	
-    	// moves the tower object as mouse moves
-    	if(gamePanel.mouseX > 650 && gamePanel.mouseX < 750 && 
-    		gamePanel.mouseY > 400 && gamePanel.mouseY < 500 && 
-    		gamePanel.mouseIsPressed && scoreCounter >= 300)
-    	{	// if mouse is pressed on tower icon, create a new object
-	    		placingSun = true;
-	    		newSun = new Sun(mouseLocation);
-    	}    
-    	else if(gamePanel.mouseX > 0 && gamePanel.mouseX < 600 && 
-        	gamePanel.mouseY > 0 && gamePanel.mouseY < 600 && 
-        	gamePanel.mouseIsPressed && placingSun
-        	&& line.distanceToPath(gamePanel.mouseX, gamePanel.mouseY) > 60)
-    	{	// if mouse is pressed on game screen, place tower on game screen
-	    		newSun.setPosition(mouseLocation);
-	    		towers.add(new Sun(mouseLocation));
-	    		scoreCounter -= 300;
-	    		newSun = null;
-	    		placingSun = false;	
-    	}
-    	
-    	// moves tower object with mouse movements
-    	if(newSun != null)
-    	{
-    		newSun.setPosition(mouseLocation);
-    	}	
+        Coordinate mouseLocation = new Coordinate(gamePanel.mouseX, gamePanel.mouseY);
+
+        // CORRECTION : Zone Y passée de 400-500 à 550-650
+        if(gamePanel.mouseX > 650 && gamePanel.mouseX < 750 &&
+                gamePanel.mouseY > 550 && gamePanel.mouseY < 650 &&
+                gamePanel.mouseIsPressed && scoreCounter >= 300)
+        {
+            placingSun = true;
+            newSun = new Sun(mouseLocation);
+        }
+        else if(gamePanel.mouseX > 0 && gamePanel.mouseX < 600 &&
+                gamePanel.mouseY > 0 && gamePanel.mouseY < 600 &&
+                gamePanel.mouseIsPressed && placingSun
+                && line.distanceToPath(gamePanel.mouseX, gamePanel.mouseY) > 60)
+        {
+            newSun.setPosition(mouseLocation);
+            towers.add(new Sun(mouseLocation));
+            scoreCounter -= 300;
+            newSun = null;
+            placingSun = false;
+        }
+
+        if(newSun != null)
+        {
+            newSun.setPosition(mouseLocation);
+        }
     }
 
     public boolean isGameIsOver() {
