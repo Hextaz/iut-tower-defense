@@ -1,4 +1,7 @@
-package game;
+package game.enemies;
+
+import game.ImageLoader;
+import game.PathPosition;
 
 /**
  * This class creates a single alien enemy
@@ -8,7 +11,7 @@ public class Alien extends Enemy
 	/**
 	 * Constructor
 	 */
-	Alien(PathPosition p)
+    public Alien(PathPosition p)
 	{
 		ImageLoader loader = ImageLoader.getLoader();
 		this.enemy = loader.getImage("resources/Alien-Ship.png");

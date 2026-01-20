@@ -1,41 +1,46 @@
-package game;
+package game.towers;
+
+import game.*;
+import game.effects.SunSpot;
+import game.enemies.Enemy;
 
 import java.util.List;
 
 /**
- * This class creates a single blackhole tower
+ * This class creates a single sun tower
  */
-public class BlackHole extends Tower
+public class Sun extends Tower
 {
 	/**
 	 * Constructor
 	 */
-	public BlackHole(Coordinate pos)
+	public Sun(Coordinate pos)
 	{
 		ImageLoader loader = ImageLoader.getLoader();
-		this.tower = loader.getImage("resources/blackhole.png");
+		this.tower = loader.getImage("resources/sun.png");
 		this.position = pos;
-		this.anchorX = -40;
-		this.anchorY = -40;
+		this.anchorX = -50;
+		this.anchorY = -50;
 	}
-	
+
 	/**
 	 * 
 	 */
 	public void interact(Game game, double deltaTime)
-	{	// tracks time that effect has existed
+	{
+		
+		List<Enemy> enemies = game.enemies; // new list of enemies
+		
+		// tracks time that effect has existed
 		timeSinceLastFire += deltaTime;
 		
 		// if time less than 1.5 seconds, don't interact
-		if(timeSinceLastFire < 1)
+		if(timeSinceLastFire < .2)
 			return;
-		
-		List<Enemy> enemies = game.enemies; // new list of enemies
 		
 		// Gives position of an enemy in enemy list
 		for(Enemy e: enemies)
 		{	
-			
 			// holds position of enemy
 			Coordinate enemyPos = e.getPosition().getCoordinate();
 
@@ -53,12 +58,12 @@ public class BlackHole extends Tower
 			Coordinate pos = new Coordinate(position.x, position.y);	
 			
 			// if enemy is in range, fire salt
-			if(dist < 80)
-			{	StarDust stardust = new StarDust(pos, enemyPos);
-				game.effects.add(stardust);
+			if(dist < 100)
+			{	SunSpot sunspot = new SunSpot(pos, enemyPos);
+				game.effects.add(sunspot);
 				timeSinceLastFire = 0;
 				return;
 			}	
 		} 
-	}	
+	}
 }

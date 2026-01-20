@@ -1,4 +1,7 @@
-package game;
+package game.effects;
+
+import game.enemies.Enemy;
+import game.Game;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -33,8 +36,8 @@ abstract public class Effect
 			double dx, dy, dist;	// change in x, y, and total distance
 			
 			// calculates change in x and y position 
-			dx = e.position.getCoordinate().x - posX; // x position of enemy - effect 
-			dy = e.position.getCoordinate().y - posY; // y position of enemy - effect 
+			dx = e.getPosition().getCoordinate().x - posX; // x position of enemy - effect
+			dy = e.getPosition().getCoordinate().y - posY; // y position of enemy - effect
 			
 			// use Pythagorean theorem to calculate distance
 			dist = Math.sqrt((dx*dx) + (dy*dy));

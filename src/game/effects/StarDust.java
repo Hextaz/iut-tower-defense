@@ -1,4 +1,7 @@
-package game;
+package game.effects;
+
+import game.Coordinate;
+import game.ImageLoader;
 
 /**
  * Game effect when the Black hole attacks 

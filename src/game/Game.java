@@ -1,5 +1,15 @@
 package game;
 
+import game.effects.Effect;
+import game.enemies.Alien;
+import game.enemies.Asteroid;
+import game.enemies.Comet;
+import game.enemies.Enemy;
+import game.towers.BlackHole;
+import game.towers.Missil;
+import game.towers.Sun;
+import game.towers.Tower;
+
 import java.awt.*;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -79,17 +89,17 @@ public class Game implements Runnable
     private boolean gameIsWon;			// indicates if game is won
     
     int livesCounter; 					// counter for lives left
-    int scoreCounter;					// points the user earns
-    int killsCounter;					// number of enemies destroyed
+    public int scoreCounter;					// points the user earns
+    public int killsCounter;					// number of enemies destroyed
     int killTarget;					// target number of enemies to destroy
     /* create enemies */
-    List<Enemy> enemies;				// list of enemy objects
+    public List<Enemy> enemies;				// list of enemy objects
     
     /* create towers */
     List<Tower> towers;					// list of tower objects
     
     /* create effects */
-    List<Effect> effects;				// list of effect objects
+    public List<Effect> effects;				// list of effect objects
     
     // You will declare other variables here.  These variables will last for
     //   the lifetime of the game, so don't store temporary values or loop counters
@@ -607,38 +617,6 @@ public class Game implements Runnable
         {
             newSun.setPosition(mouseLocation);
         }
-    }
-
-    public boolean isGameIsOver() {
-        return gameIsOver;
-    }
-
-    public void setGameIsOver(boolean gameIsOver) {
-        this.gameIsOver = gameIsOver;
-    }
-
-    public boolean isGameIsWon() {
-        return gameIsWon;
-    }
-
-    public void setGameIsWon(boolean gameIsWon) {
-        this.gameIsWon = gameIsWon;
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
     }
 
 }	

@@ -1,9 +1,15 @@
-package game;
+package game.towers;
+
+import game.Coordinate;
+import game.enemies.Enemy;
+import game.Game;
+import game.ImageLoader;
+import game.effects.Bullet;
 
 import java.awt.*;
 import java.util.List;
 
-public class Missil extends Tower  {
+public class Missil extends Tower {
 
     public Missil(Coordinate pos) {
         ImageLoader loader = ImageLoader.getLoader();
@@ -15,7 +21,7 @@ public class Missil extends Tower  {
     }
 
     @Override
-    void interact(Game game, double deltaTime) {
+    public void interact(Game game, double deltaTime) {
         // tracks time that effect has existed
         timeSinceLastFire += deltaTime;
 

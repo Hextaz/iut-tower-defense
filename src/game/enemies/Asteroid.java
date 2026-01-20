@@ -1,4 +1,7 @@
-package game;
+package game.enemies;
+
+import game.ImageLoader;
+import game.PathPosition;
 
 /**
  * This class creates a single comet enemy
@@ -8,7 +11,7 @@ public class Asteroid extends Enemy
 	/**
 	 * Constructor
 	 */
-	Asteroid(PathPosition p)
+    public Asteroid(PathPosition p)
 	{
 		ImageLoader loader = ImageLoader.getLoader();
 		this.enemy = loader.getImage("resources/asteroid.png");

@@ -1,4 +1,7 @@
-package game;
+package game.effects;
+
+import game.Coordinate;
+import game.ImageLoader;
 
 public class Bullet extends Effect {
     public Bullet(Coordinate pos, Coordinate target) {

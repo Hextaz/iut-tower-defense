@@ -28,7 +28,7 @@ public class ImageLoader
 	 * @param null
 	 * @return image loader
 	 */
-	static ImageLoader getLoader()
+	public static ImageLoader getLoader()
 	{	
 		if(instance == null)
 			instance = new ImageLoader();

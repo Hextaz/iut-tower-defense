@@ -1,4 +1,7 @@
-package game;
+package game.enemies;
+
+import game.Coordinate;
+import game.PathPosition;
 
 import java.awt.Graphics;
 import java.awt.Image;

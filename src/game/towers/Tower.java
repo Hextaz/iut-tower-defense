@@ -1,4 +1,7 @@
-package game;
+package game.towers;
+
+import game.Coordinate;
+import game.Game;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -33,7 +36,7 @@ abstract public class Tower
 		position = c;
 	}
 	
-	abstract void interact(Game game, double deltaTime);
+	public abstract void interact(Game game, double deltaTime);
 }
 
 
