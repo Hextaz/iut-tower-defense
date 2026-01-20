@@ -29,7 +29,7 @@ abstract public class Effect
 		posY += (int) (velocityY*deltaTime);
 		
 		// see if stardust hit enemy
-		List<Enemy> enemies = game.enemies;
+		List<Enemy> enemies = game.getEnemies();
 		for(Enemy e: new LinkedList<Enemy>(enemies))
 		{
 			// Compute distance of enemy to effect
@@ -46,9 +46,9 @@ abstract public class Effect
 			//if enemy is in range of effect, destroy enemy
 			if(dist < 40)	
 			{	
-				game.enemies.remove(e);
-				game.scoreCounter += 3;
-				game.killsCounter += 1;
+				game.getEnemies().remove(e);
+				game.getPlayer().earnMoney(3);
+				game.getPlayer().addKill();
 			}
 		}
 	}
