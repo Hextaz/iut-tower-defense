@@ -268,6 +268,10 @@ public class Game implements Runnable
         
         // Fill effects list with new LinkedList
         effects = new LinkedList<Effect>();
+
+        // initialize
+        placingMissil = false;
+        newBlackHole = null;
         
         // initialize
         placingBlackHole = false;
