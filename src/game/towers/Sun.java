@@ -1,8 +1,10 @@
 package game.towers;
 
-import game.*;
-import game.effects.SunSpot;
+import game.Coordinate;
 import game.enemies.Enemy;
+import game.Game;
+import game.ImageLoader;
+import game.effects.SunSpot;
 
 import java.util.List;
 
@@ -28,16 +30,15 @@ public class Sun extends Tower
 	 */
 	public void interact(Game game, double deltaTime)
 	{
-		
-		List<Enemy> enemies = game.enemies; // new list of enemies
-		
 		// tracks time that effect has existed
 		timeSinceLastFire += deltaTime;
 		
 		// if time less than 1.5 seconds, don't interact
 		if(timeSinceLastFire < .2)
 			return;
-		
+
+		List<Enemy> enemies = game.enemies; // new list of enemies
+
 		// Gives position of an enemy in enemy list
 		for(Enemy e: enemies)
 		{	
