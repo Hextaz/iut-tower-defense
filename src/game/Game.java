@@ -17,8 +17,6 @@ import java.util.Scanner;
 import java.util.List;
 import javax.swing.*;
 
-/* The class begins below the enum. */
-
 /**
  * This class represents the playable game.  If you create an
 
@@ -184,12 +182,7 @@ public class Game implements Runnable
         f.setTitle("Basil Vetas's Tower Defense Game");
         f.setContentPane(gamePanel);
         f.pack();
-        f.setVisible(true); 
-        
-    	// creates a new ImageLoader object and loads the background image
-		// ImageLoader loader = ImageLoader.getLoader();
-        // backdrop = loader.getImage("resources/stars.jpg");
-        // Handled by GameRenderer now
+        f.setVisible(true);
 
         JOptionPane.showMessageDialog(null,  "Rules of the game:\n" +
         		"1. Place towers on the map to stop enemies from reaching the Earth.\n" +
@@ -354,7 +347,4 @@ public class Game implements Runnable
         
         state = GameState.WAIT;
     }
-    
-
-
 }
